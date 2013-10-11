@@ -1,0 +1,22 @@
+<div jwcid="@common/Border" borderTitle="ognl:borderTitle">
+    <!-- HTML layout components begin-->
+    <!-- HTML layout components end-->
+
+    <span jwcid="@common/ErrorMsg"/>
+    <form jwcid="form@Form" delegate="bean:validator">
+        <fieldset>
+        <table>
+        <tbody>
+            <tr jwcid="common@common/ItemCommon"
+                item="ognl:Object"
+                useExtension="true"
+                useDid="true"
+                useFieldSet="false"
+            />
+        </tbody>
+        </table>
+        </fieldset>
+        <fieldset jwcid="@setting/SettingsFieldset" settings="ognl:Object.settings" renderGroupTitle="false"/>
+        <ul jwcid="@common/FormActions" listener="listener:commit" callback="ognl:callback"/>
+    </form>
+</div>

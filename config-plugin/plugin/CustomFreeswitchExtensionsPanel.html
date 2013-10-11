@@ -1,0 +1,42 @@
+<span jwcid="$content$">
+    <span jwcid="@common/QuickHelp" value="message:quick.help.extensions"/>
+    <span jwcid="@common/ErrorMsg"/>
+    <ul class="component-links">
+	<li><a jwcid="addExtensionLink@DirectLink" listener="listener:add"><span key="label.extensions.add"/></a></li>
+    </ul>
+    <form jwcid="extensionsForm@Form" id="extensionsForm">
+	<table jwcid="@common/Table"
+	    source="ognl:CustomFreeswitchExtensionsContext.FreeSwitchExtensions"
+	    columns="literal:* name,enabled,description"
+	    class="bean:rowClass.next"
+	    row="ognl:currentRow"
+	    selections="ognl:selections">
+	    <span jwcid="nameColumnValue@Block">
+		<a jwcid="editRowLink@DirectLink" listener="listener:edit" parameters="ognl:currentRow.id"><span jwcid="@Insert" value="ognl:currentRow.name"/></a>
+	    </span>
+	    <span jwcid="enabledColumnValue@Block">
+		<span jwcid="@common/EnabledColumn" value="ognl:currentRow.enabled"/>
+	    </span>
+	</table>
+	<ul class="component-submit">
+	    <li>
+		<input type="submit"
+		    jwcid="duplicate@Submit"
+		    listener="listener:duplicate"
+		    selected="ognl:rowsToDuplicate"
+		    tag="ognl:selections.allSelected"
+		    value="message:button.duplicate"
+		/>
+	    </li>
+	    <li>
+		<input type="submit"
+		    jwcid="delete@Submit"
+		    listener="listener:delete"
+		    selected="ognl:rowsToDelete"
+		    tag="ognl:selections.allSelected"
+		    value="message:button.extensions.delete"
+		/>
+	    </li>
+	</ul>
+    </form>
+</span>
