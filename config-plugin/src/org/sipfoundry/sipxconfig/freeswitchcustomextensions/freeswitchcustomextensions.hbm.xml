@@ -2,5 +2,19 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.sipfoundry.sipxconfig.freeswitchcustomextensions" default-lazy="false">
+  <!--
+    - Classes
+  -->
+  <subclass name="CustomFreeswitchExtension" extends="org.sipfoundry.sipxconfig.freeswitch.FreeswitchExtension" discriminator-value="Z">
+    <many-to-one cascade="all" name="valueStorage" column="value_storage_id"
+        class="org.sipfoundry.sipxconfig.setting.ValueStorage"/>
+  </subclass>
+
+  <!--
+    - Queries
+  -->
+  <query name="customFreeswitchExtensionWithName">
+    <![CDATA[from CustomFreeswitchExtension ext where ext.name = :value]]>
+  </query>
 
 </hibernate-mapping>

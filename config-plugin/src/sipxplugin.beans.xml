@@ -6,7 +6,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-   <bean id="FreeSwitchCustomExtensionsHibernate" class="org.sipfoundry.sipxconfig.common.HibernateConfigurationPlugin">
+   <bean id="CustomFreeswitchExtensionsHibernate" class="org.sipfoundry.sipxconfig.common.HibernateConfigurationPlugin">
     <property name="mappingResources">
       <list>
         <value>org/sipfoundry/sipxconfig/freeswitchcustomextensions/freeswitchcustomextensions.hbm.xml</value>
@@ -14,17 +14,23 @@
     </property>
   </bean>
 
-  <bean id="freeswitchcustomextensionsI18n"
-	class="org.springframework.context.support.ResourceBundleMessageSource">
-	<property name="basename" value="freeswitchcustomextensions" />
+  <bean id="customfreeswitchextensionsI18n"
+    class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basename" value="freeswitchcustomextensions" />
   </bean>
 
-  <bean id="freeSwitchCustomExtensionsContext" class="org.springframework.aop.framework.ProxyFactoryBean" parent="abstractDao">
-    <property name="proxyInterfaces" value="org.sipfoundry.sipxconfig.freeswitchcustomextensions.FreeSwitchCustomExtensionsContext"/>
-    <property name="target" ref="freeSwitchCustomExtensionsContextImpl"/>
+  <bean id="customFreeswitchExtension" class="org.sipfoundry.sipxconfig.freeswitchcustomextensions.CustomFreeswitchExtension" scope="prototype"/>
+
+  <bean id="customFreeswitchExtensionsSettings" class="org.sipfoundry.sipxconfig.freeswitchcustomextensions.CustomFreeswitchExtensionsSettings" parent="settingsBean">
+    <property name="modelFilesContext" ref="modelFilesContext"/>
   </bean>
 
-  <bean id="freeSwitchCustomExtensionsContextImpl" class="org.sipfoundry.sipxconfig.freeswitchcustomextensions.FreeSwitchCustomExtensionsContextImpl" parent="abstractDaoImpl">
+  <bean id="customFreeswitchExtensionsHook" class="org.sipfoundry.sipxconfig.site.SimplePluginHook">
+    <property name="hookId" value="CustomFreeswitchExtensionsHook"/>
+    <property name="featureId" value="freeswitchcustomextensions"/>
+  </bean>
+
+  <bean id="customFreeswitchExtensionsContextImpl" class="org.sipfoundry.sipxconfig.freeswitchcustomextensions.CustomFreeswitchExtensionsContextImpl" parent="abstractDaoImpl">
     <property name="replicationManager" ref="replicationManagerImpl" />
     <property name="aliasManager" ref="aliasManager"/>
     <property name="featureManager" ref="featureManager" />
@@ -32,16 +38,20 @@
       <bean parent="beanWithSettingsDao">
         <property name="target">
           <bean parent="beanWithSettingsDaoImpl">
-            <constructor-arg value="org.sipfoundry.sipxconfig.freeswitchcustomextensions.FreeSwitchCustomExtensionsSettings"/>
+            <constructor-arg value="org.sipfoundry.sipxconfig.freeswitchcustomextensions.CustomFreeswitchExtensionsSettings"/>
           </bean>
         </property>
       </bean>
     </property>
   </bean>
 
-  <bean id="freeswitchcustomextensionsHook" class="org.sipfoundry.sipxconfig.site.SimplePluginHook">
-    <property name="hookId" value="FreeSwitchCustomExtensionsHook"/>
-    <property name="featureId" value="freeswitchcustomextensions"/>
+  <bean id="customFreeswitchExtensionsContext" class="org.springframework.aop.framework.ProxyFactoryBean" parent="abstractDao">
+    <property name="proxyInterfaces" value="org.sipfoundry.sipxconfig.freeswitchcustomextensions.CustomFreeswitchExtensionsContext"/>
+    <property name="target" ref="customFreeswitchExtensionsContextImpl"/>
+  </bean>
+
+  <bean id="customFreeswitchExtensionsConfig" class="org.sipfoundry.sipxconfig.freeswitchcustomextensions.CustomFreeswitchExtensionsConfig" parent="freeswitchConfigFile">
+    <property name="customFreeswitchExtensionsContext" ref="customFreeswitchExtensionsContext" />
   </bean>
 
 </beans>
