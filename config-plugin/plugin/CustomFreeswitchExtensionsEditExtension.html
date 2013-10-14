@@ -18,7 +18,7 @@
         </table>
         </fieldset>
         <fieldset jwcid="@setting/SettingsFieldset" settings="ognl:Object.settings" renderGroupTitle="false"/>
-        <textarea  id="code"><span jwcid="@Insert" value="ognl:content"/></textarea>
+        <textarea  id="code" style="height: 50px"><span jwcid="@Insert" value="ognl:content"/></textarea>
         <jwcid="@common/FormActions" listener="listener:commit" callback="ognl:callback"/>
     </form>
     <span jwcid="@Script" scriptAsset="asset:scriptCodeMirror"/>
