@@ -18,7 +18,14 @@ freeswitchcustomextensions_SRC = $(shell cd $(srcdir); find src -type f -name '*
 freeswitchcustomextensions_RESOURCES = $(shell cd $(srcdir)/src; find -type f -not -name '*.java')
 
 plugin_RESOURCES = \
-	$(shell cd $(srcdir); find plugin -type f)
+	$(shell cd $(srcdir); find plugin -type f \( \
+	-name '*.html' \
+	-o -name '*.page' \
+	-o -name '*.properties' \
+	-o -name '*.script' \
+	-o -name '*.js' \
+	-o -name '*.css' \
+	\))
 
 freeswitchcustomextensions_PKGS = \
 	sipxconfig-neoconf \

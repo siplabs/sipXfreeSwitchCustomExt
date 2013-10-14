@@ -10,11 +10,13 @@
 package org.sipfoundry.sipxconfig.web.plugin;
 
 /* Tapestry 4 page API imports */
+import org.apache.tapestry.annotations.Asset;
 import org.apache.tapestry.annotations.Bean;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Persist;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
+import org.apache.tapestry.IAsset;
 
 /*sipXecs WEB components API imports */
 import org.sipfoundry.sipxconfig.components.PageWithCallback;
@@ -31,6 +33,15 @@ public abstract class CustomFreeswitchExtensionsEditExtension extends PageWithCa
     /* Properties */
     @InjectObject("spring:customFreeswitchExtensionsContext")
     public abstract CustomFreeswitchExtensionsContext getCustomFreeswitchExtensionsContext();
+/*
+    @Asset(value = "context:plugin/ace.script")
+    public abstract IAsset getScriptAce();
+*/
+    @Asset(value = "context:plugin/CodeMirror.script")
+    public abstract IAsset getScriptCodeMirror();
+
+    @Asset(value = "classpath:/org/sipfoundry/sipxconfig/web/plugin/codemirror.css")
+    public abstract IAsset getStyleCodeMirror();
 
     @Persist
     public abstract Integer getObjectId();
@@ -46,6 +57,10 @@ public abstract class CustomFreeswitchExtensionsEditExtension extends PageWithCa
     public abstract SipxValidationDelegate getValidator();
 
     /*  Methods */
+
+    public String getContent() {
+        return "<?xml version=\"1.0\" encoding=\"utf8\"?>\n<include>\n</include>\n";
+    }
 
     public void pageBeginRender(PageEvent event) {
         if (!TapestryUtils.isValid(this)) {

@@ -1,4 +1,5 @@
 <div jwcid="@common/Border" borderTitle="ognl:borderTitle">
+    <style jwcid="@Relation" media="all" href="asset:styleCodeMirror"/>
     <!-- HTML layout components begin-->
     <!-- HTML layout components end-->
 
@@ -17,6 +18,8 @@
         </table>
         </fieldset>
         <fieldset jwcid="@setting/SettingsFieldset" settings="ognl:Object.settings" renderGroupTitle="false"/>
-        <ul jwcid="@common/FormActions" listener="listener:commit" callback="ognl:callback"/>
+        <textarea  id="code"><span jwcid="@Insert" value="ognl:content"/></textarea>
+        <jwcid="@common/FormActions" listener="listener:commit" callback="ognl:callback"/>
     </form>
+    <span jwcid="@Script" scriptAsset="asset:scriptCodeMirror"/>
 </div>

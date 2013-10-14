@@ -17,20 +17,37 @@ bundle agent 00_sipxcustomfse {
   vars:
     any::
       "conf_file" string => "sipXcfse_context.xml";
-      "conf_path" string => "$(sipx.SIPX_CONFDIR)/freeswitch/conf/dialplan/$(conf_file)";
+      "conf_file_path" string => "$(sipx.SIPX_CONFDIR)/freeswitch/conf/dialplan/$(conf_file)";
+
+      "conf_dir" string => "sipXcfse";
+      "conf_dir_path" string => "$(sipx.SIPX_CONFDIR)/freeswitch/conf/dialplan/$(conf_dir)/";
 
   files:
     !sipxcustomfse::
-      "$(conf_path)"
-        comment => "uninstall freeswitch custom extensions config $(this.promiser)",
+      "$(conf_file_path)"
+        comment => "uninstall freeswitch custom extensions context $(this.promiser)",
+        delete => unlink,
+        classes => if_repaired("reload_sipxfreeswitch");
+
+      "$(conf_dir_path)/"
+        comment => "uninstall freeswitch custom extensions $(this.promiser)",
+        depth_search => recurse("0"),
         delete => unlink,
         classes => if_repaired("reload_sipxfreeswitch");
 
     sipxcustomfse::
-      "$(conf_path)"
-        comment => "install freeswitch custom extensions config $(this.promiser)",
+      "$(conf_file_path)"
+        comment => "install freeswitch custom extensions context $(this.promiser)",
         create => "true",
         perms => m("644"),
         copy_from => copy_from_cfdata("$(sipx.location_id)/dialplan/$(conf_file)"),
+        classes => if_repaired("reload_sipxfreeswitch");
+
+      "$(conf_dir_path)/"
+        comment => "install freeswitch custom extensions $(this.promiser)",
+        depth_search => recurse("0"),
+        create => "true",
+        perms => m("644"),
+        copy_from => copy_from_cfdata("$(sipx.location_id)/dialplan/$(conf_dir)/"),
         classes => if_repaired("reload_sipxfreeswitch");
 }
