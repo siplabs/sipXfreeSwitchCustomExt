@@ -5,21 +5,29 @@
 
     <span jwcid="@common/ErrorMsg"/>
     <form jwcid="form@Form" delegate="bean:validator">
-        <fieldset>
         <table>
         <tbody>
             <tr jwcid="common@common/ItemCommon"
                 item="ognl:Object"
-                useExtension="true"
-                useDid="true"
+                useExtension="false"
+                useDid="false"
                 useFieldSet="false"
             />
         </tbody>
         </table>
-        </fieldset>
-        <fieldset jwcid="@setting/SettingsFieldset" settings="ognl:Object.settings" renderGroupTitle="false"/>
-        <textarea  id="code" style="height: 50px"><span jwcid="@Insert" value="ognl:content"/></textarea>
-        <jwcid="@common/FormActions" listener="listener:commit" callback="ognl:callback"/>
+        <table>
+        <tbody>
+            <tr>
+                <td width="25%"><label><span key="label.AliasSuffix"/></label></td>
+                <td><input type="text" jwcid="suffix@TextField" value="ognl:suffix"/></td>
+            </tr>
+            <tr>
+                <td width="25%"><span key="label.code"/></td>
+                <td><textarea jwcid="code@TextArea" value="ognl:content" cols="20" rows="5"></textarea></td>
+            </tr>
+        </tbody>
+        </table>
+        <span jwcid="@Script" scriptAsset="asset:scriptCodeMirror"/>
+        <span jwcid="@common/FormActions" listener="listener:commit" callback="ognl:callback"/>
     </form>
-    <span jwcid="@Script" scriptAsset="asset:scriptCodeMirror"/>
 </div>

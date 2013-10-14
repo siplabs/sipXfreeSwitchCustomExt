@@ -46,6 +46,7 @@ public class CustomFreeswitchExtension extends FreeswitchExtension implements Re
     public static final String VALID_REGULAR_EXPRESSION = "^.+$";
     static final String ALIAS_RELATION = "customfreeswitchextension";
     private AddressManager m_addressManager;
+    private String m_aliasSuffix;
 
     /**
      * We call this condition the (first, because they can be many) condition that has
@@ -68,6 +69,14 @@ public class CustomFreeswitchExtension extends FreeswitchExtension implements Re
             return getNumberCondition().getExtension();
         }
         return null;
+    }
+
+    public String getAliasSuffix() {
+        return m_aliasSuffix;
+    }
+
+    public void setAliasSuffix(String value) {
+        m_aliasSuffix = value;
     }
 
     /* Set extension handling for customFreeswitchExtension */

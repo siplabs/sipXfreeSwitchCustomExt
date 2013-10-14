@@ -59,7 +59,20 @@ public abstract class CustomFreeswitchExtensionsEditExtension extends PageWithCa
     /*  Methods */
 
     public String getContent() {
-        return "<?xml version=\"1.0\" encoding=\"utf8\"?>\n<include>\n</include>\n";
+        //TODO: Read form file
+        return "<include>\n</include>\n";
+    }
+
+    public void setContent(String value) {
+        //TODO: Write to file
+    }
+
+    public String getSuffix() {
+        return getObject().getAliasSuffix();
+    }
+
+    public void setSuffix(String value) {
+        getObject().setAliasSuffix(value);
     }
 
     public void pageBeginRender(PageEvent event) {
