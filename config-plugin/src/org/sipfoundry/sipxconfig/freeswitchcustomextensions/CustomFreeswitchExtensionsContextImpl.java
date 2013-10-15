@@ -11,6 +11,8 @@ package org.sipfoundry.sipxconfig.freeswitchcustomextensions;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +21,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
+
 import org.hibernate.Query;
 import org.sipfoundry.sipxconfig.alias.AliasManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
@@ -69,6 +73,7 @@ public class CustomFreeswitchExtensionsContextImpl extends SipxHibernateDaoSuppo
     private FeatureManager m_featureManager;
     private BeanWithSettingsDao<CustomFreeswitchExtensionsSettings> m_settingsDao;
     private ReplicationManager m_replicationManager;
+    private String m_extensionsDir;
 
     public void setBeanFactory(BeanFactory beanFactory) {
         m_beanFactory = beanFactory;
@@ -88,6 +93,11 @@ public class CustomFreeswitchExtensionsContextImpl extends SipxHibernateDaoSuppo
     @Required
     public void setReplicationManager(ReplicationManager replicationManager) {
         m_replicationManager = replicationManager;
+    }
+
+    @Required
+    public void setExtensionsDir(String value) {
+        m_extensionsDir = value;
     }
 
     /* Settings API */
@@ -192,27 +202,76 @@ public class CustomFreeswitchExtensionsContextImpl extends SipxHibernateDaoSuppo
         }
         removeNullActions(extension);
         if (extension.isNew()) {
+            writeExtensionContent(extension);
             getHibernateTemplate().saveOrUpdate(extension);
         } else {
+            writeExtensionContent(extension);
             getHibernateTemplate().merge(extension);
+        }
+    }
+
+    private void writeExtensionContent(CustomFreeswitchExtension extension) {
+        if (null == extension) {
+            throw new UserException("&null.extension");
+        }
+        if (null == extension.getContent()) {
+            throw new UserException("&null.content");
+        }
+        if (extension.getId().equals(-1)) {
+            return;
+        }
+        if (null == extension.getId()) {
+            throw new UserException("&null.id");
+        }
+        try {
+            File f = new File(String.format("%s/%d.xml", m_extensionsDir, extension.getId()));
+            BufferedWriter w = new BufferedWriter(new FileWriter(f));
+            w.write(extension.getContent());
+            w.close();
+        } catch (IOException e) {
+            throw new UserException("&write.content.error");
+        }
+    }
+
+    private void readExtensionContent(CustomFreeswitchExtension extension) {
+        if (null == extension) {
+            throw new UserException("&null.extension");
+        }
+        if (null == extension.getId()) {
+            throw new UserException("&null.id");
+        }
+        try {
+            File f = new File(String.format("%s/%d.xml", m_extensionsDir, extension.getId()));
+            String content = FileUtils.readFileToString(f);
+            extension.setContent(content);
+        } catch (IOException e) {
+            throw new UserException("&read.content.error");
         }
     }
 
     @Override
     public CustomFreeswitchExtension getFreeswitchExtensionById(Integer extensionId) {
-        return getHibernateTemplate().load(CustomFreeswitchExtension.class, extensionId);
+        CustomFreeswitchExtension extension = getHibernateTemplate().load(CustomFreeswitchExtension.class, extensionId);
+        readExtensionContent(extension);
+        return extension;
     }
 
     @Override
     public CustomFreeswitchExtension getFreeswitchExtensionByName(String extensionName) {
         List<CustomFreeswitchExtension> extensions = getHibernateTemplate().findByNamedQueryAndNamedParam(
                 QUERY_CUSTOM_EXTENSIONS_WITH_NAMES, QUERY_PARAM_VALUE, extensionName);
-        return DataAccessUtils.singleResult(extensions);
+        CustomFreeswitchExtension extension = DataAccessUtils.singleResult(extensions);
+        readExtensionContent(extension);
+        return extension;
     }
 
     @Override
     public List<CustomFreeswitchExtension> getFreeswitchExtensions() {
-        return getHibernateTemplate().loadAll(CustomFreeswitchExtension.class);
+        List<CustomFreeswitchExtension> extensions = getHibernateTemplate().loadAll(CustomFreeswitchExtension.class);
+        for (CustomFreeswitchExtension extension : extensions) {
+            readExtensionContent(extension);
+        }
+        return extensions;
     }
 
     private void removeNullActions(CustomFreeswitchExtension extension) { // Should not be Tested

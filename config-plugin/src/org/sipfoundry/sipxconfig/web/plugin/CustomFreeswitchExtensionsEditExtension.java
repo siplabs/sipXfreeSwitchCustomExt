@@ -59,20 +59,11 @@ public abstract class CustomFreeswitchExtensionsEditExtension extends PageWithCa
     /*  Methods */
 
     public String getContent() {
-        //TODO: Read form file
-        return "<include>\n</include>\n";
+        return getObject().getContent();
     }
 
     public void setContent(String value) {
-        //TODO: Write to file
-    }
-
-    public String getSuffix() {
-        return getObject().getAliasSuffix();
-    }
-
-    public void setSuffix(String value) {
-        getObject().setAliasSuffix(value);
+        getObject().setContent(value);
     }
 
     public void pageBeginRender(PageEvent event) {

@@ -23,6 +23,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
@@ -39,6 +42,7 @@ import org.sipfoundry.sipxconfig.freeswitch.FreeswitchFeature;
 import org.sipfoundry.sipxconfig.setting.Setting;
 
 public class CustomFreeswitchExtension extends FreeswitchExtension implements Replicable, DeployConfigOnEdit {
+    private static final Log LOG = LogFactory.getLog(CustomFreeswitchExtension.class);
 
     public static final String DESTINATION_NUMBER = "destination_number";
     public static final String DESTINATION_NUMBER_PATTERN = "^%s$";
@@ -46,7 +50,7 @@ public class CustomFreeswitchExtension extends FreeswitchExtension implements Re
     public static final String VALID_REGULAR_EXPRESSION = "^.+$";
     static final String ALIAS_RELATION = "customfreeswitchextension";
     private AddressManager m_addressManager;
-    private String m_aliasSuffix;
+    private String m_contentXML;
 
     /**
      * We call this condition the (first, because they can be many) condition that has
@@ -71,12 +75,12 @@ public class CustomFreeswitchExtension extends FreeswitchExtension implements Re
         return null;
     }
 
-    public String getAliasSuffix() {
-        return m_aliasSuffix;
+    public String getContent() {
+        return m_contentXML;
     }
 
-    public void setAliasSuffix(String value) {
-        m_aliasSuffix = value;
+    public void setContent(String value) {
+        m_contentXML = value;
     }
 
     /* Set extension handling for customFreeswitchExtension */
@@ -170,20 +174,13 @@ public class CustomFreeswitchExtension extends FreeswitchExtension implements Re
             Address address = m_addressManager.getSingleAddress(FreeswitchFeature.SIP_ADDRESS);
             if (null != address) {
                 String extension = getCapturedExtension();
-                String sipUri = SipUri.format(extension, address.getAddress(), address.getPort());
-                String sipUriNoQuote = SipUri.format(extension, address.getAddress(), address.getPort(), false);
-                AliasMapping nameMapping = new AliasMapping(getName(), sipUriNoQuote, ALIAS_RELATION);
-                AliasMapping lineMapping = new AliasMapping(extension, sipUri, ALIAS_RELATION);
-                mappings.addAll(Arrays.asList(nameMapping, lineMapping));
-                if (getAlias() != null) {
-                    AliasMapping aliasMapping = new AliasMapping(getAlias(), sipUri, ALIAS_RELATION);
-                    mappings.add(aliasMapping);
-                }
-                if (getDid() != null) {
-                    AliasMapping didMapping = new AliasMapping(getDid(), sipUri, ALIAS_RELATION);
-                    mappings.add(didMapping);
-                }
+                String sipUri = SipUri.format(String.format("%s", extension), address.getAddress(), address.getPort());
+                String sipUriNoQuote = SipUri.format(String.format("~~cfse~%s", extension), address.getAddress(), address.getPort(), false);
+                AliasMapping lineMapping = new AliasMapping(String.format("~~cfse~%s", extension), sipUri, ALIAS_RELATION);
+                mappings.add(lineMapping);
             }
+        } else {
+            LOG.error("Alias manager is not defined!");
         }
         return mappings;
     }
@@ -196,13 +193,13 @@ public class CustomFreeswitchExtension extends FreeswitchExtension implements Re
     }
 
     @Override
-    public String getIdentity(String domain) {
-        return SipUri.stripSipPrefix(SipUri.format(null, getExtension(), domain));
+    public String getIdentity(String domainName) {
+        return SipUri.stripSipPrefix(SipUri.format(null, String.format("%s", getExtension()), domainName));
     }
 
     @Override
     public boolean isValidUser() {
-        return false;
+        return true;
     }
 
     @Override

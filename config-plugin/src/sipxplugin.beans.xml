@@ -19,7 +19,9 @@
     <property name="basename" value="freeswitchcustomextensions" />
   </bean>
 
-  <bean id="customFreeswitchExtension" class="org.sipfoundry.sipxconfig.freeswitchcustomextensions.CustomFreeswitchExtension" scope="prototype"/>
+  <bean id="customFreeswitchExtension" class="org.sipfoundry.sipxconfig.freeswitchcustomextensions.CustomFreeswitchExtension" scope="prototype">
+    <property name="addressManager" ref="addressManager"/>
+  </bean>
 
   <bean id="customFreeswitchExtensionsSettings" class="org.sipfoundry.sipxconfig.freeswitchcustomextensions.CustomFreeswitchExtensionsSettings" parent="settingsBean">
     <property name="modelFilesContext" ref="modelFilesContext"/>
@@ -43,6 +45,7 @@
         </property>
       </bean>
     </property>
+    <property name="extensionsDir" value="${sysdir.var}/freeswitchcustomextensions"/>
   </bean>
 
   <bean id="customFreeswitchExtensionsContext" class="org.springframework.aop.framework.ProxyFactoryBean" parent="abstractDao">

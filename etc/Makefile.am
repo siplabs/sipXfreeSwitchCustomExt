@@ -23,6 +23,10 @@ fsdir = $(SIPX_CONFDIR)/freeswitch
 dist_fs_DATA = \
 	freeswitch/sipXcfse_context.xml.vm
 
+datdir = @SIPX_VARDIR@/$(confsubdir)
+dist_dat_DATA = \
+	$(confsubdir)/readme.txt
+
 precommit : validate-xml
 
 validate-xml : $(xml)

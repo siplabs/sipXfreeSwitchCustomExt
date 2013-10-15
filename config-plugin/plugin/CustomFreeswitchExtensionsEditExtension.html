@@ -9,24 +9,22 @@
         <tbody>
             <tr jwcid="common@common/ItemCommon"
                 item="ognl:Object"
-                useExtension="false"
+                useExtension="true"
                 useDid="false"
                 useFieldSet="false"
             />
         </tbody>
         </table>
+        <span jwcid="@If" condition="ognl:ObjectId!=null">
         <table>
         <tbody>
-            <tr>
-                <td width="25%"><label><span key="label.AliasSuffix"/></label></td>
-                <td><input type="text" jwcid="suffix@TextField" value="ognl:suffix"/></td>
-            </tr>
             <tr>
                 <td width="25%"><span key="label.code"/></td>
                 <td><textarea jwcid="code@TextArea" value="ognl:content" cols="20" rows="5"></textarea></td>
             </tr>
         </tbody>
         </table>
+        </span>
         <span jwcid="@Script" scriptAsset="asset:scriptCodeMirror"/>
         <span jwcid="@common/FormActions" listener="listener:commit" callback="ognl:callback"/>
     </form>

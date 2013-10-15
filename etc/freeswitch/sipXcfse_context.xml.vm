@@ -1,7 +1,10 @@
 <include>
-    <context name="default-freeswitchcustomextensions">
+<context name="default-freeswitchcustomextensions">
 #foreach($customextension in $customextensions)
-	<X-PRE-PROCESS cmd="include" data="customextension-${customextension.id}.xml"/>
+<!--// Extension: $!{customextension.name} BEGIN  //-->
+$!{customextension.content}
+<!--// Extension: $!{customextension.name} END  //-->
+
 #end
     </context>
 </include>
