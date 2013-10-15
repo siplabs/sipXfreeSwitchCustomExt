@@ -22,6 +22,8 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.hibernate.Query;
 import org.sipfoundry.sipxconfig.alias.AliasManager;
@@ -55,7 +57,9 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.support.DataAccessUtils;
 
 public class CustomFreeswitchExtensionsContextImpl extends SipxHibernateDaoSupport implements CustomFreeswitchExtensionsContext, BeanFactoryAware,
-        FeatureProvider {
+            FeatureProvider {
+
+    private static final Log LOG = LogFactory.getLog(CustomFreeswitchExtensionsContextImpl.class);
 
     private static final String QUERY_CUSTOM_EXTENSIONS_WITH_NAMES = "customFreeswitchExtensionWithName";
     private static final String QUERY_PARAM_VALUE = "value";
@@ -171,7 +175,17 @@ public class CustomFreeswitchExtensionsContextImpl extends SipxHibernateDaoSuppo
     }
 
     public void deleteFreeswitchExtension(CustomFreeswitchExtension extension) {
+        deleteExtensionContent(extension);
         getHibernateTemplate().delete(extension);
+    }
+
+    public void deleteFreeswitchExtensions(Collection<Integer> ids) {
+        for(Integer id : ids) {
+            CustomFreeswitchExtension extension = getFreeswitchExtensionById(id);
+            if (null != extension) {
+                deleteFreeswitchExtension(extension);
+            }
+        }
     }
 
     public void saveFreeswitchExtension(CustomFreeswitchExtension extension) {
@@ -214,11 +228,11 @@ public class CustomFreeswitchExtensionsContextImpl extends SipxHibernateDaoSuppo
         if (null == extension) {
             throw new UserException("&null.extension");
         }
-        if (null == extension.getContent()) {
-            throw new UserException("&null.content");
-        }
         if (extension.getId().equals(-1)) {
             return;
+        }
+        if (null == extension.getContent()) {
+            throw new UserException("&null.content");
         }
         if (null == extension.getId()) {
             throw new UserException("&null.id");
@@ -229,7 +243,7 @@ public class CustomFreeswitchExtensionsContextImpl extends SipxHibernateDaoSuppo
             w.write(extension.getContent());
             w.close();
         } catch (IOException e) {
-            throw new UserException("&write.content.error");
+            LOG.error("Error writing file " + String.format("%s/%d.xml", m_extensionsDir, extension.getId()));
         }
     }
 
@@ -243,9 +257,27 @@ public class CustomFreeswitchExtensionsContextImpl extends SipxHibernateDaoSuppo
         try {
             File f = new File(String.format("%s/%d.xml", m_extensionsDir, extension.getId()));
             String content = FileUtils.readFileToString(f);
+            if (content.isEmpty()) {
+                content = String.format("<extension>\n<condition field=\"destination_number\" expression=\"^%s$\">\n</condition>\n</extension>\n", extension.getExtension());
+            }
             extension.setContent(content);
         } catch (IOException e) {
-            throw new UserException("&read.content.error");
+            LOG.error("Error reading file " + String.format("%s/%d.xml", m_extensionsDir, extension.getId()));
+        }
+    }
+
+    private void deleteExtensionContent(CustomFreeswitchExtension extension) {
+        if (null == extension) {
+            throw new UserException("&null.extension");
+        }
+        if (null == extension.getId()) {
+            throw new UserException("&null.id");
+        }
+        try {
+            File f = new File(String.format("%s/%d.xml", m_extensionsDir, extension.getId()));
+            FileUtils.forceDelete(f);
+        } catch (IOException e) {
+            LOG.error("Error deleting file " + String.format("%s/%d.xml", m_extensionsDir, extension.getId()));
         }
     }
 

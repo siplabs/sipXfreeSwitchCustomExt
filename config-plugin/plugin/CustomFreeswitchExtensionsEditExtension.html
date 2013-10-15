@@ -1,29 +1,25 @@
 <div jwcid="@common/Border" borderTitle="ognl:borderTitle">
     <style jwcid="@Relation" media="all" href="asset:styleCodeMirror"/>
+    <style jwcid="@Relation" media="all" href="asset:styleCodeMirrorFullScreen"/>
     <!-- HTML layout components begin-->
+    <div jwcid="@common/QuickHelp" value="message:quick.help"/>
     <!-- HTML layout components end-->
 
     <span jwcid="@common/ErrorMsg"/>
     <form jwcid="form@Form" delegate="bean:validator">
-        <table>
+        <table style="width: 100%">
         <tbody>
             <tr jwcid="common@common/ItemCommon"
                 item="ognl:Object"
                 useExtension="true"
                 useDid="false"
                 useFieldSet="false"
+                extensionValidator="spring-validators:validCustomFreeswitchExtension"
             />
         </tbody>
         </table>
         <span jwcid="@If" condition="ognl:ObjectId!=null">
-        <table>
-        <tbody>
-            <tr>
-                <td width="25%"><span key="label.code"/></td>
-                <td><textarea jwcid="code@TextArea" value="ognl:content" cols="20" rows="5"></textarea></td>
-            </tr>
-        </tbody>
-        </table>
+        <textarea jwcid="code@TextArea" value="ognl:content" cols="20" rows="5"></textarea>
         </span>
         <span jwcid="@Script" scriptAsset="asset:scriptCodeMirror"/>
         <span jwcid="@common/FormActions" listener="listener:commit" callback="ognl:callback"/>

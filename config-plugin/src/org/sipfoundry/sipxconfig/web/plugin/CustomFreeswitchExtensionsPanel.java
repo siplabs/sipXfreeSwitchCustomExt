@@ -66,18 +66,18 @@ public abstract class CustomFreeswitchExtensionsPanel extends BaseComponent {
     public IPage edit(IRequestCycle cycle, Integer id) {
         return addeditPage(cycle, id);
     }
-
+/*
     public void duplicate() {
         Collection<Integer> selectedRows = getRowsToDuplicate();
         if (null != selectedRows) {
-//            getCustomFreeswitchExtensionsContext().duplicateCustomFreeswitchExtensions(selectedRows);
+            getCustomFreeswitchExtensionsContext().duplicateCustomFreeswitchExtensions(selectedRows);
         }
     }
-
+*/
     public void delete() {
         Collection<Integer> selectedRows = getRowsToDelete();
         if (null != selectedRows) {
-//            getCustomFreeswitchExtensionsContext().deleteCustomFreeswitchExtensions(selectedRows);
+            getCustomFreeswitchExtensionsContext().deleteFreeswitchExtensions(selectedRows);
         }
     }
 }

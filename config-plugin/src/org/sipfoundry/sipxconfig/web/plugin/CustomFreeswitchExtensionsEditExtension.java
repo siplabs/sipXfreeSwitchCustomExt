@@ -33,15 +33,18 @@ public abstract class CustomFreeswitchExtensionsEditExtension extends PageWithCa
     /* Properties */
     @InjectObject("spring:customFreeswitchExtensionsContext")
     public abstract CustomFreeswitchExtensionsContext getCustomFreeswitchExtensionsContext();
-/*
-    @Asset(value = "context:plugin/ace.script")
-    public abstract IAsset getScriptAce();
-*/
+
+    // TODO: extract CodeMirror to JWC
+    /* CodeMirror on-line editor begin */
     @Asset(value = "context:plugin/CodeMirror.script")
     public abstract IAsset getScriptCodeMirror();
 
     @Asset(value = "classpath:/org/sipfoundry/sipxconfig/web/plugin/codemirror.css")
     public abstract IAsset getStyleCodeMirror();
+
+    @Asset(value = "classpath:/org/sipfoundry/sipxconfig/web/plugin/fullscreen.css")
+    public abstract IAsset getStyleCodeMirrorFullScreen();
+    /* CodeMirror on-line editor end */
 
     @Persist
     public abstract Integer getObjectId();
@@ -103,8 +106,6 @@ public abstract class CustomFreeswitchExtensionsEditExtension extends PageWithCa
     private void saveValid() {
         CustomFreeswitchExtensionsContext context = getCustomFreeswitchExtensionsContext();
         CustomFreeswitchExtension obj = getObject();
-        // call set extension - hack to regenerate FS dialplan
-//        obj.setExtension(obj.getExtension());
         context.saveFreeswitchExtension(obj);
         Integer id = getObject().getId();
         setObjectId(id);

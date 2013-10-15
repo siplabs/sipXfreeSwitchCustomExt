@@ -1,10 +1,11 @@
 <include>
 <context name="default-freeswitchcustomextensions">
-#foreach($customextension in $customextensions)
-<!--// Extension: $!{customextension.name} BEGIN  //-->
-$!{customextension.content}
-<!--// Extension: $!{customextension.name} END  //-->
-
+#foreach($extension in $customextensions)
+#if(${extension.enabled})
+<!--// Extension: $!{extension.name} BEGIN  //-->
+$!{extension.content}
+<!--// Extension: $!{extension.name} END  //-->
 #end
-    </context>
+#end
+</context>
 </include>

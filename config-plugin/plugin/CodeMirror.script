@@ -5,13 +5,22 @@
 <script>
     <include-script resource-path="/org/sipfoundry/sipxconfig/web/plugin/codemirror.js" />
     <include-script resource-path="/org/sipfoundry/sipxconfig/web/plugin/xml.js" />
+    <include-script resource-path="/org/sipfoundry/sipxconfig/web/plugin/fullscreen.js" />
     <initialization>
     var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         mode: {
             name: "xml",
             alignCDATA: true
         },
-        lineNumbers: true
+        lineNumbers: true,
+        extraKeys: {
+                "F11": function(cm) {
+                    cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                },
+                "Esc": function(cm) {
+                    if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                }
+        }
     });
     </initialization>
 </script>

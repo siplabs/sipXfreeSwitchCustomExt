@@ -6,6 +6,15 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
+  <bean name="validCustomFreeswitchExtension" class="org.apache.tapestry.form.validator.Pattern">
+    <property name="pattern">
+	<value>(([a-zA-Z0-9]+)|(-*)|(_*))*</value>
+    </property>
+    <property name="message">
+	<value>Please enter digits, chars(in UP/down case), "-" and "_", for example: 123 or test or test_1-2</value>
+    </property>
+  </bean>
+
    <bean id="CustomFreeswitchExtensionsHibernate" class="org.sipfoundry.sipxconfig.common.HibernateConfigurationPlugin">
     <property name="mappingResources">
       <list>

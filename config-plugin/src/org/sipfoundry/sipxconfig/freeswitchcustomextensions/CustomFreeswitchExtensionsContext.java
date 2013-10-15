@@ -37,6 +37,8 @@ public interface CustomFreeswitchExtensionsContext extends FreeswitchExtensionPr
 
     void deleteFreeswitchExtension(CustomFreeswitchExtension extension);
 
+    void deleteFreeswitchExtensions(Collection<Integer> ids);
+
     CustomFreeswitchExtension getFreeswitchExtensionById(Integer extensionId);
 
     CustomFreeswitchExtension getFreeswitchExtensionByName(String extensionName);
