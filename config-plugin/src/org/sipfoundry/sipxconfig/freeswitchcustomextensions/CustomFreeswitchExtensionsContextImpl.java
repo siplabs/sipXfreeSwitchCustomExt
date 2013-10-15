@@ -229,10 +229,8 @@ public class CustomFreeswitchExtensionsContextImpl extends SipxHibernateDaoSuppo
             throw new UserException("&null.extension");
         }
         if (extension.getId().equals(-1)) {
+            extension.setContent(String.format("<extension>\n\t<condition field=\"destination_number\" expression=\"^%s$\">\n\t</condition>\n</extension>\n", extension.getExtension()));
             return;
-        }
-        if (null == extension.getContent()) {
-            throw new UserException("&null.content");
         }
         if (null == extension.getId()) {
             throw new UserException("&null.id");
@@ -240,6 +238,11 @@ public class CustomFreeswitchExtensionsContextImpl extends SipxHibernateDaoSuppo
         try {
             File f = new File(String.format("%s/%d.xml", m_extensionsDir, extension.getId()));
             BufferedWriter w = new BufferedWriter(new FileWriter(f));
+            if (null == extension.getContent()) {
+                extension.setContent(String.format("<extension>\n\t<condition field=\"destination_number\" expression=\"^%s$\">\n\t</condition>\n</extension>\n", extension.getExtension()));
+            } else if (extension.getContent().isEmpty()) {
+                extension.setContent(String.format("<extension>\n\t<condition field=\"destination_number\" expression=\"^%s$\">\n\t</condition>\n</extension>\n", extension.getExtension()));
+            }
             w.write(extension.getContent());
             w.close();
         } catch (IOException e) {
@@ -258,11 +261,13 @@ public class CustomFreeswitchExtensionsContextImpl extends SipxHibernateDaoSuppo
             File f = new File(String.format("%s/%d.xml", m_extensionsDir, extension.getId()));
             String content = FileUtils.readFileToString(f);
             if (content.isEmpty()) {
-                content = String.format("<extension>\n<condition field=\"destination_number\" expression=\"^%s$\">\n</condition>\n</extension>\n", extension.getExtension());
+                extension.setContent(String.format("<extension>\n\t<condition field=\"destination_number\" expression=\"^%s$\">\n\t</condition>\n</extension>\n", extension.getExtension()));
+            } else {
+                extension.setContent(content);
             }
-            extension.setContent(content);
         } catch (IOException e) {
             LOG.error("Error reading file " + String.format("%s/%d.xml", m_extensionsDir, extension.getId()));
+            extension.setContent(String.format("<extension>\n\t<condition field=\"destination_number\" expression=\"^%s$\">\n\t</condition>\n</extension>\n", extension.getExtension()));
         }
     }
 
