@@ -54,7 +54,7 @@ public class CustomFreeswitchExtension extends FreeswitchExtension implements Re
 
 
     public String getDefaultContent() {
-        String.format("<extension>\n\t<condition field=\"destination_number\" expression=\"^%s$\">\n\t\t<action application=\"LOG\" data=\"CUSTOM EXTENSION %s\"/>\n\t</condition>\n</extension>\n", getExtension(), getExtension());
+        return String.format("<extension>\n\t<condition field=\"destination_number\" expression=\"^%s$\">\n\t\t<action application=\"LOG\" data=\"CUSTOM EXTENSION %s\"/>\n\t</condition>\n</extension>\n", getExtension(), getExtension());
     }
     /**
      * We call this condition the (first, because they can be many) condition that has
