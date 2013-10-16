@@ -45,7 +45,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/sipxpbx/freeswitch/*
 %{_sysconfdir}/sipxpbx/database/plugin.d/*
 %{_datadir}/sipxecs/cfinputs/plugin.d/*.cf
-%{_datadir}/java/sipXecs/sipXconfig/plugins/sipxfreeswitchcustomext-config.jar
+%{_datadir}/java/sipXecs/sipXconfig/plugins/freeswitchcustomextensions.jar
 %{_localstatedir}/sipxdata/freeswitchcustomextensions/*
 
 %post

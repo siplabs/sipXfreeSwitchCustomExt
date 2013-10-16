@@ -11,7 +11,7 @@ EXTRA_DIST = \
 	src
 
 jardir = @SIPX_JAVADIR@/sipXconfig/plugins
-JAR_FILE = freeswitchcustomextensions-config.jar
+JAR_FILE = freeswitchcustomextensions.jar
 jar_DATA = $(JAR_FILE)
 
 freeswitchcustomextensions_SRC = $(shell cd $(srcdir); find src -type f -name '*.java')
