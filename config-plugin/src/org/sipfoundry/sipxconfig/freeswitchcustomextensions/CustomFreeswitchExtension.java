@@ -52,6 +52,10 @@ public class CustomFreeswitchExtension extends FreeswitchExtension implements Re
     private AddressManager m_addressManager;
     private String m_contentXML;
 
+
+    public String getDefaultContent() {
+        String.format("<extension>\n\t<condition field=\"destination_number\" expression=\"^%s$\">\n\t\t<action application=\"LOG\" data=\"CUSTOM EXTENSION %s\"/>\n\t</condition>\n</extension>\n", getExtension(), getExtension());
+    }
     /**
      * We call this condition the (first, because they can be many) condition that has
      * destination_number as a field
